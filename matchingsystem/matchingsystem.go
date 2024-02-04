@@ -1,20 +1,32 @@
 package matchingsystem
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/MatchSystem/dto"
 )
 
 var Engine IMatchingSystem
+var MatchQueue *chan *dto.User
 
 type IMatchingSystem interface {
 	Create(*dto.User)
-	Get(*dto.User) []*dto.User
+	Get(string) (*dto.User, bool)
+	GetMatchUserList(*dto.User) []*dto.User
 	Match(*dto.User, *dto.User) bool
-	Remove(*dto.User)
+	Print() string
+	Remove(string)
 	Run()
 }
 
 func InitEngine() {
-	Engine = NewSimpleSystem()
+	Engine = NewSimpleSystem(100)
+	if simpleSystem, ok := Engine.(*SimpleSystem); ok {
+		MatchQueue = &simpleSystem.MatchQueue
+	} else {
+		fmt.Printf("error: type-assertion SimpleSystem failed.")
+		os.Exit(-1)
+	}
 	go Engine.Run()
 }
