@@ -3,6 +3,7 @@ package user
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/MatchSystem/dto"
 	"github.com/MatchSystem/matchingsystem"
@@ -37,12 +38,9 @@ func AddSinglePersonAndMatch(c *gin.Context) {
 	matchingsystem.Engine.Create(user)
 
 	// Step 2: get user list that match the new user's rule
-	userList := []string{}
-	for _, another := range matchingsystem.Engine.GetMatchUserList(user) {
-		userList = append(userList, another.String())
-	}
+	userList := matchingsystem.Engine.GetMatchUserList(user, 100)
 
-	c.JSON(http.StatusOK, gin.H{"List": userList})
+	c.JSON(http.StatusOK, userList)
 }
 
 func RemoveSinglePerson(c *gin.Context) {
@@ -60,25 +58,35 @@ func RemoveSinglePerson(c *gin.Context) {
 func QuerySinglePeople(c *gin.Context) {
 	name := c.Param("name")
 
+	N, ok := c.GetQuery("N")
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Parameter 'N' not provided"})
+		return
+	}
+
+	// Parse 'N' as an integer
+	maxSize, err := strconv.Atoi(N)
+	if err != nil || maxSize <= 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid value for 'N'"})
+		return
+	}
+
 	user, exists := matchingsystem.Engine.Get(name)
 	if !exists {
 		c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("User %s not found.", name)})
 		return
 	}
 
-	userList := []string{}
-	for _, another := range matchingsystem.Engine.GetMatchUserList(user) {
-		userList = append(userList, another.String())
-	}
+	userList := matchingsystem.Engine.GetMatchUserList(user, maxSize)
 
-	c.JSON(http.StatusOK, gin.H{"List": userList})
+	c.JSON(http.StatusOK, userList)
 }
 
 func Like(c *gin.Context) {
 	name := c.Param("name")
 
 	var userParams struct {
-		LikedName        string `json:"likedName"`
+		LikedName string `json:"likedName"`
 	}
 
 	if err := c.BindJSON(&userParams); err != nil {

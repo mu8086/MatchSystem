@@ -13,7 +13,7 @@ var MatchQueue *chan *dto.User
 type IMatchingSystem interface {
 	Create(*dto.User)
 	Get(string) (*dto.User, bool)
-	GetMatchUserList(*dto.User) []*dto.User
+	GetMatchUserList(*dto.User, int) []*dto.User
 	Match(*dto.User, *dto.User) bool
 	Print() string
 	Remove(string)

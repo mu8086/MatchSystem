@@ -1,15 +1,22 @@
 package dto
 
 import (
+	"encoding/json"
+
 	"github.com/MatchSystem/constant"
 )
 
 type Rule interface {
+	MarshalJSON() ([]byte, error)
 	Match(...any) bool
-	Name() string
+	String() string
 }
 
 type GenderRule struct{}
+
+func (g GenderRule) MarshalJSON() ([]byte, error) {
+	return json.Marshal(g.String())
+}
 
 func (g GenderRule) Match(params ...any) bool {
 	if len(params) != 2 {
@@ -22,11 +29,15 @@ func (g GenderRule) Match(params ...any) bool {
 	return ok1 && ok2 && gender1 == gender2
 }
 
-func (g GenderRule) Name() string {
+func (g GenderRule) String() string {
 	return "GenderRule"
 }
 
 type HeightRule struct{}
+
+func (h HeightRule) MarshalJSON() ([]byte, error) {
+	return json.Marshal(h.String())
+}
 
 func (h HeightRule) Match(params ...any) bool {
 	if len(params) != 2 {
@@ -38,7 +49,7 @@ func (h HeightRule) Match(params ...any) bool {
 	return ok1 && ok2 && height1 < height2
 }
 
-func (h HeightRule) Name() string {
+func (h HeightRule) String() string {
 	return "HeightRule"
 }
 

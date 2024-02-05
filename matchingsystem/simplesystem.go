@@ -36,11 +36,14 @@ func (s *SimpleSystem) Get(name string) (*dto.User, bool) {
 	return user, true
 }
 
-func (s *SimpleSystem) GetMatchUserList(user *dto.User) (userList []*dto.User) {
+func (s *SimpleSystem) GetMatchUserList(user *dto.User, maxSize int) (userList []*dto.User) {
 	s.Users.Range(func(_, value interface{}) bool {
 		u := value.(*dto.User)
 		if u != user && user.Match(u) {
 			userList = append(userList, u)
+		}
+		if maxSize <= 0 {
+			return false
 		}
 		return true
 	})

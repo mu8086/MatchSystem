@@ -9,12 +9,12 @@ import (
 )
 
 type User struct {
-	Name       string
-	Gender     constant.Gender
-	Height     int
-	Dates      int
-	Rules      []*Rule
-	LikedUsers map[*User]struct{}
+	Name       string             `json:"name"`
+	Gender     constant.Gender    `json:"gender"`
+	Height     int                `json:"height"`
+	Dates      int                `json:"dates"`
+	Rules      []*Rule            `json:"rules"`
+	LikedUsers map[*User]struct{} `json:"-"`
 }
 
 func NewUser(name, gender string, height, dates int) *User {
@@ -45,7 +45,7 @@ func (u *User) String() string {
 	for _, rule := range u.Rules {
 		switch rule := (*rule).(type) {
 		case GenderRule, HeightRule:
-			rules += rule.Name() + " "
+			rules += rule.String() + " "
 		}
 	}
 	return fmt.Sprintf("[%v][%v][%v][%v][%v]", u.Name, u.Gender, u.Height, u.Dates, rules)
