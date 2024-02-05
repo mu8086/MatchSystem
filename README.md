@@ -1,4 +1,4 @@
-# MatchSystemMatching System API Documentation
+# Matching System
 
 ## Overview
 The Matching System API allows users to interact with the matching system to create, query, and manage user profiles. Users can add themselves to the system, search for potential matches, remove their profiles, and express interest in other users.
@@ -76,3 +76,45 @@ In this example, we will walk through the complete flow of using the Matching Sy
 - ```curl -X DELETE http://localhost:8080/users/userB```
 ### 10. UserA Query Matches (Discover UserB Removed)
 - ```curl http://localhost:8080/users/userA/matches?N=5```
+
+
+## Building and Running
+### Build
+To build the Go application, use Docker. Open your terminal and run the following command:
+- ```make docker-build```
+    
+    This command will utilize Docker to build your Go application and package it into a Docker image.
+### Run
+Once the build is complete, start the Docker container using the following command:
+- ```make docker-run```
+
+    This will launch a Docker container named MatchSystem and map the local port 8080 to port 8080 within the container.
+
+    Your Go application should now be accessible at http://localhost:8080.
+
+### Stop
+To stop and remove the container, execute the following command:
+- ```make docker-stop```
+
+## Import and Run on Another Machine
+If you want to run the application on a different machine, follow these steps:
+
+### 1. Export Docker Image:
+On the machine where you built the Docker image, export the image to a tar file:
+- ```docker save -o dockerimage.tar mu8086/match-system```
+
+### 2. Transfer to New Machine:
+Transfer the your-image-name.tar file to the new machine, using SCP, FTP, or any other method.
+
+### 3. Import Docker Image:
+On the new machine, import the Docker image using the following command:
+- ```docker load -i dockerimage.tar```
+
+### 4. Run Docker Container:
+Start the Docker container on the new machine:
+- ```docker run -p 8080:8080 -d mu8086/match-system```
+
+    This will run the container in the background, mapping local port 8080 to the container's 8080.
+
+### 5. Access the Application:
+Verify that your application is running by accessing http://localhost:8080.
