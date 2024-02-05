@@ -15,7 +15,7 @@ func AddSinglePersonAndMatch(c *gin.Context) {
 		Name        string `json:"name"`
 		Gender      string `json:"gender"`
 		Height      int    `json:"height"`
-		WantedDates int    `json:"wanted_dates"`
+		WantedDates int    `json:"dates"`
 	}
 
 	if err := c.BindJSON(&userParams); err != nil {
