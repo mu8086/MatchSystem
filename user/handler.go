@@ -45,6 +45,7 @@ func AddSinglePersonAndMatch(c *gin.Context) {
 
 func RemoveSinglePerson(c *gin.Context) {
 	name := c.Param("name")
+
 	_, exists := matchingsystem.Engine.Get(name)
 	if !exists {
 		c.JSON(http.StatusNotFound, gin.H{"error": fmt.Sprintf("User %s not found.", name)})

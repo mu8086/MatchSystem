@@ -55,20 +55,14 @@ func (u *User) Match(another *User) bool {
 	for _, rule := range u.Rules {
 		switch rule := (*rule).(type) {
 		case GenderRule:
-			if u.IsFemale() {
-				rule.Match(another.Gender, constant.Male)
-			} else if u.IsMale() {
-				rule.Match(another.Gender, constant.Female)
-			} else {
+			if u.IsFemale() && !rule.Match(another.Gender, constant.Male) ||
+				u.IsMale() && !rule.Match(another.Gender, constant.Female) {
 				return false
 			}
 
 		case HeightRule:
-			if u.IsFemale() {
-				rule.Match(u.Height, another.Height)
-			} else if u.IsMale() {
-				rule.Match(another.Height, u.Height)
-			} else {
+			if u.IsFemale() && !rule.Match(u.Height, another.Height) ||
+				u.IsMale() && !rule.Match(another.Height, u.Height) {
 				return false
 			}
 

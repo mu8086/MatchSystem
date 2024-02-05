@@ -50,19 +50,6 @@ func (s *SimpleSystem) GetMatchUserList(user *dto.User, maxSize int) (userList [
 	return userList
 }
 
-func (s *SimpleSystem) Match(*dto.User, *dto.User) bool {
-	return false
-}
-
-func (s *SimpleSystem) Print() string {
-	all := "all: "
-	s.Users.Range(func(_, value interface{}) bool {
-		all += value.(*dto.User).String()
-		return true
-	})
-	return all
-}
-
 func (s *SimpleSystem) Remove(name string) {
 	s.Users.Delete(name)
 }
