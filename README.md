@@ -3,6 +3,9 @@
 ## Overview
 The Matching System API allows users to interact with the matching system to create, query, and manage user profiles. Users can add themselves to the system, search for potential matches, remove their profiles, and express interest in other users.
 
+## ![Image Alt Text](./pics/design.png)
+
+
 ## Base URL
 ```
 http://localhost:8080
